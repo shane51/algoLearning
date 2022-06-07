@@ -32,4 +32,9 @@ class fabonaciTest {
         assertEquals(8, fibonacci.getFb(6));
     }
 
+
+    @Test
+    void shouldGetReturnWhenInputVeryLargeNum() {
+        assertEquals("832040", String.valueOf(fibonacci.getFb(30)));
+    }
 }

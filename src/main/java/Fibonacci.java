@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class Fibonacci {
 
-    static Map<Integer, Integer> dp = new HashMap<>();
+    static Map<Long, Long> dp = new HashMap<>();
 
-    public int getFb(int n) {
+    public long getFb(long n) {
         if(n==0){
             return 0;
         }
@@ -17,7 +17,7 @@ public class Fibonacci {
             return dp.get(n);
         }
 
-        int fbn = getFb(n-1) + getFb(n-2);
+        long fbn = getFb(n-1) + getFb(n-2);
         dp.put(n, fbn);
         return fbn;
     }
