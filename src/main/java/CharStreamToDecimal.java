@@ -1,22 +1,56 @@
+import java.util.Locale;
+
 public class CharStreamToDecimal {
+        final String INVALID = "";
     public int validateAndCal(String strInput){
-        String inputBinaryStr = hexToBinary(strInput);
+        String inputBinaryStr = hexToBinary(strInput.toUpperCase(Locale.ROOT));
         String leadingBitsStr = getLeadingBits(inputBinaryStr);
         String trailingBitsStr = getTrailingBits(inputBinaryStr);
+        if(leadingBitsStr.isEmpty() || trailingBitsStr.isEmpty()){
+            return -1;
+        }
         String result = leadingBitsStr + trailingBitsStr;
         return binaryStrToDecimal(result);
     }
 
     public int binaryStrToDecimal(String result) {
-        return 36901;
+        return Integer.parseInt(result,2);
     }
 
-    public String getTrailingBits(String strInput) {
-        return null;
+    public String getTrailingBits(String binaryStr) {
+        StringBuilder trailingBits = new StringBuilder();
+        for(int i = 8; i < binaryStr.length(); i = i+8){
+            if(!binaryStr.startsWith("10", i)){
+                return INVALID;
+            }
+            trailingBits.append(binaryStr, i + 2, i + 8);
+        }
+        return trailingBits.toString();
     }
 
-    public String getLeadingBits(String strInput) {
-        return null;
+    public String getLeadingBits(String binaryStr) {
+        switch(binaryStr.length()/8){
+            case 1:
+                return  getLeadingBitsByPrefix(binaryStr, "0", 1);
+
+            case 2:
+                return getLeadingBitsByPrefix(binaryStr, "110", 3);
+
+            case 3:
+                return getLeadingBitsByPrefix(binaryStr, "1110", 4);
+
+            case 4:
+                return getLeadingBitsByPrefix(binaryStr, "11110", 5);
+
+            case 5:
+                return getLeadingBitsByPrefix(binaryStr, "111110", 6);
+
+            case 6:
+                return getLeadingBitsByPrefix(binaryStr, "1111110", 7);
+
+            default:
+                return INVALID;
+        }
     }
 
     public String hexToBinary(String hex) {
@@ -37,6 +71,13 @@ public class CharStreamToDecimal {
         hex = hex.replaceAll("E", "1110");
         hex = hex.replaceAll("F", "1111");
         return hex;
+    }
+
+    private String getLeadingBitsByPrefix(String binaryStr, String prefix, int cutIndex) {
+        if (!binaryStr.startsWith(prefix)) {
+            return INVALID;
+        }
+        return binaryStr.substring(cutIndex, 8);
     }
 
 }
